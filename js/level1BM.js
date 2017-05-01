@@ -19,37 +19,13 @@ var totalLife =3;
 
 level1BM = {
 
-	preload: function(){
-		game.load.tilemap('map', 'assets/tilemap_src/json/level1_bookman.json', null, Phaser.Tilemap.TILED_JSON);
-		game.load.image('tile1','assets/tilemap_src/tiles/book-tileset.png');
-		game.load.image('tile2','assets/tilemap_src/tiles/default_tiles_x.png');
-		game.load.image('tile3','assets/tilemap_src/tiles/woodlandinn.png');
-		game.load.image('tile4','assets/tilemap_src/tiles/open_tileset_2x.png');
-		game.load.image('book','assets/tilemap_src/tiles/book.png');
-		game.load.image('life', 'assets/lifes.png');
-		game.load.spritesheet('enemy','assets/player/red_penguin.png',32,32);
-		game.load.spritesheet('enemy2','assets/player/pink_penguin.png',32,32);
-		game.load.spritesheet('player','assets/player/player_penguin.png', 32,32);
-		game.load.image('button','assets/button.png');
-
-
-
-		game.time.advancedTiming = true;
-		// Set the world size
-	    game.world.setBounds(0, 0, 800, 600);
-
-	    //Start the Arcade Physics systems
-    	game.physics.startSystem(Phaser.Physics.ARCADE);
-		
-
-
-	},
-
 	actionOnClick:function(){
 		window.location = ("../schoolAdventure/schoolAdventure.html");
 	},
 
 	create: function(){
+		sound.play();
+
 		map  = this.game.add.tilemap('map');
 		map.addTilesetImage('woodland','tile3');
 		map.addTilesetImage('books','tile1');
@@ -79,9 +55,16 @@ level1BM = {
 	    for(i=0;i<collectablesNum;i++){
 	    	while(!isValidTile){
 	    		// ancho
-				x= Math.floor(Math.random() * 38) + 1;
+				x= Math.floor(Math.random() * 32) + 1;
 				// alto
 				y= Math.floor(Math.random() * 17) + 1;
+
+				x2= Math.floor(Math.random() * 38) + 1;
+				y2= Math.floor(Math.random() * 14) + 1;
+
+				x = Math.min(x,x2);
+				y = Math.min(y,y2);
+
 				
 
 	    		if(!(map.hasTile(x, y, groundLayer))){
@@ -282,7 +265,7 @@ level1BM = {
     	 }
     	lives.fixedToCamera = true;
 
-    	button = game.add.button(12.5 ,18*tileSize ,  'button',this.actionOnClick);
+    	button = game.add.button(12.5 ,16.6*tileSize ,  'button',this.actionOnClick);
     	button.fixedToCamera=true;
 
      	gameoverText = game.add.text(game.world.centerX-225,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
@@ -308,6 +291,8 @@ level1BM = {
 				        player.x= 1 * tileSize;
 				        player.y= 1 * tileSize;
 
+				        killSound.play();
+
 		}
 
 		// When the player dies
@@ -316,7 +301,7 @@ level1BM = {
 		 		player.kill();
 		        gameoverText.text=" Juego Terminado \n";
 		        gameoverText.visible = true;
-		        game.paused=true;
+		        
 
 		//the "click to restart" handler
 		//game.input.onTap.addOnce(restart,this);
